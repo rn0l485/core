@@ -13,9 +13,8 @@ type WebsocketHeartbeat struct {
 	Alive  	string 		`json:"Alive"`
 }
 
-type ProcessingFunc func(ws *websocket.Conn) error
 
-func WebsocketServer(p ProcessingFunc) http.Handler {
+func WebsocketServer(p func(ws *websocket.Conn) error) http.Handler {
 	return websocket.Handler(func( ws *websocket.Conn){
 		stop := make(chan string, 1)
 		go func(ws *websocket.Conn) {
