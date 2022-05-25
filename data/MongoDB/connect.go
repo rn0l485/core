@@ -9,12 +9,15 @@ import (
 
 
 func InitMongo(MongoDBURL string, MongoDBMinPoolSize uint64)  (*mongo.Client, error) {
-	MongoClient, err := mongo.Connect(context.Background(), options.Client().ApplyURI(MongoDBURL).SetMinPoolSize(MongoDBMinPoolSize))
+	MongoClient, err := mongo.Connect(
+		context.Background(), 
+		options.Client().ApplyURI(MongoDBURL).SetMinPoolSize(MongoDBMinPoolSize),
+	)
 	if err != nil {
 		return nil, err
 	}
 
-	if err = MongoClient.Ping(context.Background(), nil); err != nil {
+	if err := MongoClient.Ping(context.Background(), nil); err != nil {
 		return nil, err
 	}
 	return  MongoClient, nil

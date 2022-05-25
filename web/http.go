@@ -4,6 +4,7 @@ import (
 	"errors"
 	"net/http"
 	"net/url"
+	"time"
 	"encoding/json"
 	"bytes"
 	"strings"
@@ -27,64 +28,74 @@ func StartMultiHttpServer(ServerList ...*http.Server) error {
 			if err != nil {
 				return err
 			}
+			return nil
 		})
 	}
 	if err := g.Wait(); err != nil {
 		return err
-	}
+	} 
+
+	return nil
 }
 
 func StartHttpServer( addr string, handler http.Handler ) error {
 	return HttpServer(addr, handler).ListenAndServe()
 }
 
-
-
-
-func NewReq(method, url string, data ...interface{}) (*http.Request, error) {
+func NewReq(method, target string, data ...interface{}) (*http.Request, error) {
 	switch method {
 	case "POST":
+		if _, ok := data[0].(map[string]interface{}); !ok {
+			return nil, errors.New("NewReq.assertion: input data type error")
+		}
+
 		if len(data) != 0 {
-			return NewJsonPost(url, data[0])
+			return NewJsonPost( target, data[0])
 		} else {
-			return NewJsonPost(url, make(map[string]string{}))
+			return NewJsonPost( target, make(map[string]string, 0))
 		}
 	case "FORM":
+		if _, ok := data.( url.Values); !ok {
+			return nil, errors.New("NewReq.assertion: input data type error.")
+		}
 		if len(data) != 0 {
-			return NewFormPost(url, data[0])
+			return NewFormPost( target, data[0])
 		} else {
-			return NewJsonPost(url, make(map[string]string{}))
+			return NewJsonPost( target, url.Values{})
 		}
 	case "GET":
-		return NewGet(url)
+		return NewGet( target)
 	default:
 		return nil, errors.New("method assign error")
 	}
 }
 
-func NewFormPost(url string, data interface{}) (*http.Request, error) {
-	d, ok := data.(url.Values)
+func NewFormPost( target string, data interface{}) (*http.Request, error) {
+	d, ok := data.( url.Values)
 	if !ok {
 		return nil, errors.New("NewFormPost.assertion: input data type error.")
 	}
 
-	req, err := http.NewRequest( "POST", url, strings.NewReader(d.Encode()))
+	req, err := http.NewRequest( "POST",  target, strings.NewReader(d.Encode()))
 	if err != nil {
 		return nil, errors.New("NewFormPost.http.NewRequest:"+err.Error())
 	}
 
-	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	req.Header.Set("Content-Type", "application/x-www-form- targetencoded")
 
 	return req, nil
 }
 
-func NewJsonPost(url string, data interface{}) ( *http.Request, error) {
+func NewJsonPost( target string, data interface{}) ( *http.Request, error) {
+	if _, ok := data.(map[string]interface{}); !ok {
+		return nil, errors.New("NewJsonPost.assertion: input data type error")
+	}
 	b, err := json.Marshal(data)
 	if err != nil {
 		return nil, errors.New("NewJsonPost.json.Marshal:"+err.Error())
 	}
 
-	req, err := http.NewRequest( "POST", url, bytes.NewBuffer(b))
+	req, err := http.NewRequest( "POST",  target, bytes.NewBuffer(b))
 	if err != nil {
 		return nil, errors.New("NewJsonPost.http.NewRequest:"+err.Error())
 	}
@@ -92,8 +103,8 @@ func NewJsonPost(url string, data interface{}) ( *http.Request, error) {
 	return req, nil 
 }
 
-func NewGet( url string ) ( *http.Request, error ) {
-	if req, err := http.NewRequest( "GET", url, nil); err != nil {
+func NewGet(  target string ) ( *http.Request, error ) {
+	if req, err := http.NewRequest( "GET", target, nil); err != nil {
 		return nil, errors.New("NewGet.http.NewRequest."+err.Error())
 	} else {
 		return req, nil 

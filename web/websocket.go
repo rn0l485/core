@@ -2,6 +2,7 @@ package web
 
 
 import (
+	"fmt"
 	"time"
 	"net/http"
 	"golang.org/x/net/websocket"
@@ -48,6 +49,7 @@ func WebsocketServer(p func(ws *websocket.Conn) error) http.Handler {
 
 		select {
 		case msg:=<-stop:
+			fmt.Println(msg)
 		}
 		return
 	})
