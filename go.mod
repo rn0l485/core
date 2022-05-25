@@ -1,4 +1,4 @@
-module github.com/SobaMain/core
+module github.com/rn0l485/core
 
 go 1.15
 
