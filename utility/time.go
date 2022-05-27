@@ -2,6 +2,7 @@ package utility
 
 
 import (
+	"errors"
 	"time"
 )
 
@@ -43,4 +44,13 @@ func ParseUnixTime(nowUnix int64, mode ...string) time.Time {
 	} else {
 		return time.Unix(nowUnix, 0)
 	}
+}
+
+func ChannelTimeOut( c chan string, data string, timeout time.Duration) error {
+	select {
+		case c<-data:
+		case <-time.After(timeout):
+			return errors.New("channel-timeout-error")
+	}
+	return nil
 }
