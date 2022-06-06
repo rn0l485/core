@@ -1,4 +1,4 @@
-package RadiusDB
+package RedisDB
 
 import (
 	"context"
