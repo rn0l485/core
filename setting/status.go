@@ -10,5 +10,8 @@ const (
 	Deny string = "deny"
 	Okay string = "okay"
 	Invalid string = "invalid"	
+	
+	Approve string = "approve"
+
 )
 
