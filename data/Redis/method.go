@@ -1,4 +1,4 @@
-package RedisDB
+package DatabaseRedisDB
 
 import (
 	"context"
@@ -9,17 +9,35 @@ import (
 )
 
 func Set(c *redis.Client, ctx context.Context, key string, value interface{}, expiration time.Duration) error {
-    p, err := json.Marshal(value)
-    if err != nil {
-       return err
-    }
-    return c.Set(ctx, key, p, expiration).Err()
+   p, err := json.Marshal(value)
+   if err != nil {
+     return err
+   }
+   return c.Set(ctx, key, p, expiration).Err()
 }
 
-func Get(c *redis.Client, ctx context.Context, key string, value interface{}) error {
-	b, err := c.Get(ctx, key).Result()
+func Get(c *redis.Client, ctx context.Context, key string, value interface{}, raw ...bool) error {
+   b, err := c.Get(ctx, key).Result()
    if err != nil {
       return err
    }
-    return json.Unmarshal([]byte(b), value)
+
+   if len(raw) == 0 || !raw[0] {
+      return json.Unmarshal([]byte(b), value)
+   }
+
+   if v, ok := value.(*string); !ok {
+      return json.Unmarshal([]byte(b), value)
+   } else {
+      *v = b
+      return nil
+   }
+}
+
+func Del(c *redis.Client, ctx context.Context, keys ...string) error {
+   if result, err := c.Del(ctx, keys).Result(); err != nil {
+      return err
+   } else {
+      return nil
+   }
 }

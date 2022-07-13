@@ -12,5 +12,7 @@ var (
 	Err_Unauthorized = errors.New("unauthorized")
 	
 	Err_DataDuplicated = errors.New("data-duplicated")
+	Err_IsExpired = errors.New("is-expired")
 	Err_NoData = errors.New("no-data")
+	Err_DataExist = errors.New("data-exist")
 )
