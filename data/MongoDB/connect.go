@@ -8,7 +8,7 @@ import (
 
 
 
-func InitMongo(MongoDBURL string, MongoDBMinPoolSize uint64)  (*mongo.Client, error) {
+func Init(MongoDBURL string, MongoDBMinPoolSize uint64)  (*mongo.Client, error) {
 	MongoClient, err := mongo.Connect(
 		context.Background(), 
 		options.Client().ApplyURI(MongoDBURL).SetMinPoolSize(MongoDBMinPoolSize),
@@ -23,7 +23,7 @@ func InitMongo(MongoDBURL string, MongoDBMinPoolSize uint64)  (*mongo.Client, er
 	return  MongoClient, nil
 }
 
-func DisconnectMongo(MongoClient *mongo.Client) {
+func Disconnect(MongoClient *mongo.Client) {
 	if err := MongoClient.Disconnect(context.Background()); err != nil {
 		panic(err)
 	}

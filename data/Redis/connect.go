@@ -6,7 +6,7 @@ import (
 )
 
 
-func InitRedis(RedisURL, RedisPassword string) ( *redis.Client, error ) {
+func Init(RedisURL, RedisPassword string) ( *redis.Client, error ) {
 	RedisClient := redis.NewClient(&redis.Options{
 		Addr:     RedisURL,
 		Password: RedisPassword,
@@ -21,7 +21,7 @@ func InitRedis(RedisURL, RedisPassword string) ( *redis.Client, error ) {
 	return RedisClient, nil
 }
 
-func DisconnectRedis( RedisClient *redis.Client ) error {
+func Disconnect( RedisClient *redis.Client ) error {
 	if err := RedisClient.Close(); err != nil {
 		return err
 	} else {

@@ -7,7 +7,7 @@ import (
 )
 
 
-func InitSQLite3 (path ...string) ( *sql.DB, error) {
+func Init(path ...string) ( *sql.DB, error) {
 	var DefaultPath string = "./data/data.db"
 	if len(path) != 0 {
 		DefaultPath = path[0]
@@ -21,7 +21,7 @@ func InitSQLite3 (path ...string) ( *sql.DB, error) {
 	return db, nil
 }
 
-func CreateSQLite3 (path ...string) error {
+func Create(path ...string) error {
 	var DefaultPath string = "./data"
 	if len(path) != 0 {
 		DefaultPath = path[0]
@@ -37,7 +37,7 @@ func CreateSQLite3 (path ...string) error {
 	return nil
 }
 
-func DisconnectSQLite3( db *sql.DB ) error {
+func Disconnect( db *sql.DB ) error {
 	if err := db.Close(); err != nil {
 		return err 
 	}
