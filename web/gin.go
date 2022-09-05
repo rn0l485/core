@@ -1,8 +1,10 @@
 package web
 
 import (
+	"fmt"
 	"time"
 	"encoding/json"
+	"net/http"
 	"github.com/gin-gonic/gin"
 
 	"github.com/rn0l485/core/utility"
@@ -33,7 +35,7 @@ type LogParams struct {
 
 func Logger(msgC chan string) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		t := time.Now()
+		start := time.Now()
 		path := c.Request.URL.Path
 		raw := c.Request.URL.RawQuery
 
@@ -54,7 +56,7 @@ func Logger(msgC chan string) gin.HandlerFunc {
 		param.ClientIP = c.ClientIP()
 		param.Method = c.Request.Method
 		param.StatusCode = c.Writer.Status()
-		param.ErrorMessage = c.Errors.ByType(ErrorTypePrivate).String()
+		param.ErrorMessage = c.Errors.ByType(gin.ErrorTypePrivate).String()
 
 		param.BodySize = c.Writer.Size()
 		if raw != "" {
@@ -104,7 +106,7 @@ func Done(c *gin.Context, data ...interface{}) {
 	}
 }
 
-func Error(c *gin.Context, errCode string, err error, netCode ...int) {
+func Error(c *gin.Context, errCode int, err error, netCode ...int) {
 	var httpCode int 
 	if len(netCode) == 0 {
 		httpCode = http.StatusNotFound
@@ -124,4 +126,9 @@ func Error(c *gin.Context, errCode string, err error, netCode ...int) {
 			"StatusCode": httpCode,
 		})		
 	}
+}
+
+func GinRouterInit() (*gin.Engine) {
+	gin.SetMode(gin.ReleaseMode)
+	return gin.New()
 }

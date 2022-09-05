@@ -55,9 +55,9 @@ func NewReq(method, target string, data ...interface{}) (*http.Request, error) {
 			return NewJsonPost( target, make(map[string]string, 0))
 		}
 	case "FORM":
-		if _, ok := data.( url.Values); !ok {
-			return nil, errors.New("NewReq.assertion: input data type error.")
-		}
+		//if _, ok := data[0].( url.Values); !ok {
+		//	return nil, errors.New("NewReq.assertion: input data type error.")
+		//}
 		if len(data) != 0 {
 			return NewFormPost( target, data[0])
 		} else {
