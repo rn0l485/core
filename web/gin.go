@@ -106,7 +106,7 @@ func Done(c *gin.Context, data ...interface{}) {
 	}
 }
 
-func Error(c *gin.Context, errCode int, err error, netCode ...int) {
+func Error(c *gin.Context, errCode interface{}, err error, netCode ...int) {
 	var httpCode int 
 	if len(netCode) == 0 {
 		httpCode = http.StatusNotFound
