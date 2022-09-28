@@ -132,3 +132,7 @@ func GinRouterInit() (*gin.Engine) {
 	gin.SetMode(gin.ReleaseMode)
 	return gin.New()
 }
+
+func GinRouterWithLogInit() (*gin.Engine) {
+	return gin.Default()
+}
