@@ -128,9 +128,14 @@ func Error(c *gin.Context, errCode interface{}, err error, netCode ...int) {
 	}
 }
 
-func GinRouterInit() (*gin.Engine) {
+func GinNewRouterInit() (*gin.Engine) {
 	gin.SetMode(gin.ReleaseMode)
 	return gin.New()
+}
+
+func GinRouterInit() (*gin.Engine) {
+	gin.SetMode(gin.ReleaseMode)
+	return gin.Default()
 }
 
 func GinRouterWithLogInit() (*gin.Engine) {
