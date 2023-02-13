@@ -8,12 +8,20 @@ import (
 	"github.com/go-redis/redis/v8"
 )
 
-func Set(c *redis.Client, ctx context.Context, key string, value interface{}, expiration time.Duration) error {
+func Set(c *redis.Client, ctx context.Context, key string, value interface{}, expiration ...time.Duration) error {
    p, err := json.Marshal(value)
    if err != nil {
      return err
    }
-   return c.Set(ctx, key, p, expiration).Err()
+
+   var expire time.Duration
+   if len(expiration) == 0 {
+      expire = 0
+   } else {
+      expire = expiration[0]
+   }
+
+   return c.Set(ctx, key, p, expire).Err()
 }
 
 func Get(c *redis.Client, ctx context.Context, key string, value interface{}, raw ...bool) error {

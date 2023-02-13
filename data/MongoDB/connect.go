@@ -23,8 +23,10 @@ func Init(MongoDBURL string, MongoDBMinPoolSize uint64)  (*mongo.Client, error) 
 	return  MongoClient, nil
 }
 
-func Disconnect(MongoClient *mongo.Client) {
+func Disconnect(MongoClient *mongo.Client) error {
 	if err := MongoClient.Disconnect(context.Background()); err != nil {
-		panic(err)
+		return err
+	} else {
+		return nil
 	}
 }
