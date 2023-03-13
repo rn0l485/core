@@ -8,8 +8,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
-	jwt "github.com/appleboy/gin-jwt/v2"
-
 
 	"github.com/rn0l485/core/utility"
 	"github.com/rn0l485/core/setting"
@@ -165,6 +163,11 @@ func GinSession(R *gin.Engine, path, domain, secret string, maxAge int) error {
 
 	return nil
 }
+
+
+
+
+
 
 /*
 func GinJWT(R *gin.Engine, RealmName, secret, IdentityKey string) error {
