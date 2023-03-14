@@ -40,9 +40,13 @@ func ParseJWT(secret, RawToken string) (*PixuClaims, error) {
 		return []byte(secret), nil
 	})
 
+	if err != nil {
+		 return nil, err
+	}
+
 	if claims, ok := token.Claims.(*PixuClaims); ok && token.Valid {
 		return claims, nil
 	} else {
-		return nil, errors.New("invalid token")
+		return nil, errors.New("invalid jwt token")
 	}
 }

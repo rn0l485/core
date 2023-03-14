@@ -3,6 +3,7 @@ package web
 import (
 	"fmt"
 	"time"
+	"strings"
 	"encoding/json"
 	"net/http"
 	"github.com/gin-gonic/gin"
@@ -164,7 +165,35 @@ func GinSession(R *gin.Engine, path, domain, secret string, maxAge int) error {
 	return nil
 }
 
+func GinJWTCheck()  func(c *gin.Context) {
+	return func(c *gin.Context) {
+		ReqHeader := c.Request.Header.Get("Authorization")
+		if ReqHeader == "" {
+			Error(c, "Authorization is null in Header", nil, http.StatusUnauthorized)
+			c.Abort()
+			return
+		}
 
+		AuthDataParts := strings.SplitN(ReqHeader, " ", 2)
+		if !(len(AuthDataParts) == 2 && AuthDataParts[0] == "Bearer") {
+			Error(c, "Format of Authorization is wrong", nil, http.StatusUnauthorized)
+			c.Abort()
+			return
+		}
+
+		Claims, err := ParseJWT(AuthDataParts[1])
+		if err != nil {
+			Error(c, "Invalid Token", nil, http.StatusUnauthorized)
+			c.Abort()
+			return
+		}
+
+		// After that, we can get Account info from c.Get("UserID")
+		c.Set("UserID", Claims.UserID)
+
+		c.Next()
+	}
+}
 
 
 
